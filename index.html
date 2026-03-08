@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#f0f2f8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>AIR Hunter</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ═══ SPLASH SCREEN ═══ -->
+<div id="splash">
+  <canvas id="splash-canvas"></canvas>
+  <div class="sp-content">
+    <div class="sp-icon-wrap">
+      <div class="sp-ring sp-ring1"></div>
+      <div class="sp-ring sp-ring2"></div>
+      <div class="sp-icon">✦</div>
+    </div>
+    <div class="sp-wordmark">
+      <span class="sp-air">AIR</span><span class="sp-hunter">Hunter</span>
+    </div>
+    <div class="sp-by">by Clock AI</div>
+    <div class="sp-loader">
+      <div class="sp-loader-fill"></div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- ═══ HEADER ═══ -->
+<header class="header" id="main-header">
+  <div class="logo-wrap">
+    <div class="logo-icon">✦</div>
+    <div>
+      <div class="logo-text">AIR<span> Hunter</span></div>
+      <div class="logo-sub">BY CLOCK AI</div>
+    </div>
+  </div>
+  <div class="streak-pill">
+    <span>🔥</span>
+    <span id="streak-count">0d</span>
+  </div>
+</header>
+
+<!-- ══════════════ PAGES ══════════════ -->
+
+<!-- ── HOME ── -->
+<div class="page on" id="page-home">
+  <div class="pg-title">AIR <em>Hunter</em> 🎯</div>
+  <div class="stat-grid">
+    <div class="sc p"><span class="sc-label">PHYSICS</span><div class="sc-val" id="s-p">—</div><span class="sc-hint">accuracy</span></div>
+    <div class="sc g"><span class="sc-label">CHEMISTRY</span><div class="sc-val" id="s-c">—</div><span class="sc-hint">accuracy</span></div>
+    <div class="sc r"><span class="sc-label">MATHS</span><div class="sc-val" id="s-m">—</div><span class="sc-hint">accuracy</span></div>
+    <div class="sc y"><span class="sc-label">STREAK</span><div class="sc-val" id="s-streak">0</div><span class="sc-hint">days 🔥</span></div>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-title">THIS WEEK</span><span id="date-disp" style="font-size:10px;color:var(--txt3);font-family:var(--fm)"></span></div>
+    <div class="card-body"><div class="streak-row" id="streak-cal"></div></div>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-title">TODAY'S TASKS</span><span class="badge p" id="task-count-badge">0/0</span></div>
+    <div class="card-body" id="home-tasks"></div>
+    <div style="padding:0 14px 14px"><button class="btn btn-p btn-full btn-sm" onclick="openModal('task-modal')">＋ Add Task</button></div>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-title">🔴 HIGH PRIORITY BACKLOG</span><button class="btn btn-o btn-xs" onclick="showPage('more');showSubPage('backlog')" style="font-size:10px">View All →</button></div>
+    <div class="card-body" id="home-backlog"></div>
+  </div>
+  <button class="btn btn-o btn-full" onclick="openModal('score-modal')" style="margin-bottom:8px;font-size:13px">📊 Update Subject Scores</button>
+</div>
+
+<!-- ── PRACTICE / CHAPTERS ── -->
+<div class="page" id="page-practice">
+  <div class="pg-title">Chapter <em>Tracker</em></div>
+  <div class="chips">
+    <div class="chip p on" onclick="switchSubj('p',this,'prac')">⚛ Physics</div>
+    <div class="chip g" onclick="switchSubj('g',this,'prac')">🧪 Chemistry</div>
+    <div class="chip r" onclick="switchSubj('r',this,'prac')">∑ Maths</div>
+  </div>
+  <div id="chapter-list"></div>
+</div>
+
+<!-- ── MORE (backlog + formulas + notes + revision + mocks + timer + analytics) ── -->
+<div class="page" id="page-more">
+  <div class="pg-title">More <em>Tools</em></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+    <button class="btn btn-o btn-full" style="height:64px;flex-direction:column;gap:4px;font-size:12px" onclick="showSubPage('backlog')"><span style="font-size:22px">🗂</span>Backlog</button>
+    <button class="btn btn-o btn-full" style="height:64px;flex-direction:column;gap:4px;font-size:12px" onclick="showSubPage('formulas')"><span style="font-size:22px">∑</span>Formulas</button>
+    <button class="btn btn-o btn-full" style="height:64px;flex-direction:column;gap:4px;font-size:12px" onclick="showSubPage('notes')"><span style="font-size:22px">📋</span>Notes</button>
+    <button class="btn btn-o btn-full" style="height:64px;flex-direction:column;gap:4px;font-size:12px" onclick="showSubPage('revision')"><span style="font-size:22px">🔁</span>Revision</button>
+    <button class="btn btn-o btn-full" style="height:64px;flex-direction:column;gap:4px;font-size:12px" onclick="showSubPage('mocks')"><span style="font-size:22px">🎯</span>Mock Tests</button>
+    <button class="btn btn-o btn-full" style="height:64px;flex-direction:column;gap:4px;font-size:12px" onclick="showSubPage('timer')"><span style="font-size:22px">⏱</span>Timer</button>
+    <button class="btn btn-o btn-full" style="height:64px;flex-direction:column;gap:4px;font-size:12px" onclick="showSubPage('analytics')"><span style="font-size:22px">📊</span>Analytics</button>
+  </div>
+  <div id="sub-backlog" class="subpage" style="display:none">
+    <div class="section-header"><span class="section-label">🗂 BACKLOG MANAGER</span><button class="btn btn-p btn-xs" onclick="openModal('bl-modal')">＋ Add</button></div>
+    <span class="badge high" id="bl-total" style="margin-bottom:12px;display:inline-flex;font-size:11px;padding:5px 10px">0 PENDING</span>
+    <div class="section-header" style="margin-top:4px"><span class="section-label">🔴 HIGH PRIORITY</span></div>
+    <div id="bl-high"></div>
+    <div class="section-header" style="margin-top:4px"><span class="section-label">🟡 MEDIUM PRIORITY</span></div>
+    <div id="bl-med"></div>
+    <div class="section-header" style="margin-top:4px"><span class="section-label">🟢 LOW PRIORITY</span></div>
+    <div id="bl-low"></div>
+  </div>
+  <div id="sub-formulas" class="subpage" style="display:none">
+    <div class="section-header"><span class="section-label">∑ FORMULA SHEET</span><button class="btn btn-p btn-xs" onclick="openModal('form-modal')">＋ Add</button></div>
+    <div class="chips" style="margin-bottom:12px">
+      <div class="chip p on" id="more-fchip-p" onclick="switchMoreSubj('p','form',this)">⚛ Physics</div>
+      <div class="chip g" id="more-fchip-g" onclick="switchMoreSubj('g','form',this)">🧪 Chemistry</div>
+      <div class="chip r" id="more-fchip-r" onclick="switchMoreSubj('r','form',this)">∑ Maths</div>
+    </div>
+    <div id="formula-list"></div>
+  </div>
+  <div id="sub-notes" class="subpage" style="display:none">
+    <div class="section-header"><span class="section-label">📋 IMPORTANT NOTES</span><button class="btn btn-p btn-xs" onclick="openModal('note-modal')">＋ Add</button></div>
+    <div class="chips" style="margin-bottom:12px">
+      <div class="chip p on" id="more-nchip-p" onclick="switchMoreSubj('p','notes',this)">⚛ Physics</div>
+      <div class="chip g" id="more-nchip-g" onclick="switchMoreSubj('g','notes',this)">🧪 Chemistry</div>
+      <div class="chip r" id="more-nchip-r" onclick="switchMoreSubj('r','notes',this)">∑ Maths</div>
+    </div>
+    <div id="notes-list"></div>
+  </div>
+  <div id="sub-revision" class="subpage" style="display:none">
+    <div class="section-header"><span class="section-label">🔁 SPACED REVISION</span><button class="btn btn-p btn-xs" onclick="openModal('rev-modal')">＋ Add</button></div>
+    <div id="rev-list"></div>
+  </div>
+  <div id="sub-mocks" class="subpage" style="display:none">
+    <div class="section-header"><span class="section-label">🎯 MOCK TESTS</span><button class="btn btn-p btn-xs" onclick="openModal('mock-modal')">＋ Add</button></div>
+    <div id="mock-trend" style="margin-bottom:12px"></div>
+    <div id="mock-list"></div>
+  </div>
+  <div id="sub-timer" class="subpage" style="display:none">
+    <div class="card">
+      <div class="card-head"><span class="card-title">POMODORO FOCUS TIMER</span></div>
+      <div class="timer-face" id="timer-face">25:00</div>
+      <div class="timer-btns">
+        <button class="btn btn-g btn-sm" onclick="startTimer()">▶ Start</button>
+        <button class="btn btn-o btn-sm" onclick="pauseTimer()">⏸ Pause</button>
+        <button class="btn btn-r btn-sm" onclick="resetTimer(25)">↺ Reset</button>
+      </div>
+      <div class="timer-presets">
+        <button class="btn btn-o btn-xs" onclick="resetTimer(25)">25m</button>
+        <button class="btn btn-o btn-xs" onclick="resetTimer(45)">45m</button>
+        <button class="btn btn-o btn-xs" onclick="resetTimer(60)">60m</button>
+        <button class="btn btn-o btn-xs" onclick="resetTimer(5)">5m Break</button>
+      </div>
+    </div>
+  </div>
+  <div id="sub-analytics" class="subpage" style="display:none">
+    <div class="stat-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px">
+      <div class="sc p"><span class="sc-label">AVG</span><div class="sc-val" id="an-avg" style="font-size:18px">—</div></div>
+      <div class="sc g"><span class="sc-label">BEST</span><div class="sc-val" id="an-best" style="font-size:18px">—</div></div>
+      <div class="sc y"><span class="sc-label">STREAK</span><div class="sc-val" id="an-streak" style="font-size:18px">0</div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="card-title">SUBJECT ACCURACY</span></div>
+      <div class="card-body" id="an-bars"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="card-title">⚠ WEAK CHAPTERS</span></div>
+      <div class="card-body" id="an-weak"></div>
+    </div>
+    <div class="card" style="margin-top:4px">
+      <div class="card-head"><span class="card-title">💾 BACKUP & RESTORE</span></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:10px">
+        <div>
+          <div style="font-size:11px;color:var(--txt3);font-family:var(--fm);margin-bottom:8px">Apna sara data JSON file mein export karo. Baad mein restore bhi kar sakte ho.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <button class="btn btn-g btn-sm btn-full" onclick="exportBackup()">📥 Export JSON</button>
+            <button class="btn btn-p btn-sm btn-full" onclick="ge('restore-inp').click()">📤 Restore</button>
+          </div>
+          <input type="file" id="restore-inp" accept=".json" style="display:none" onchange="importBackup(event)">
+        </div>
+        <div style="border-top:1px solid var(--b1);padding-top:10px">
+          <div style="font-size:11px;color:var(--txt3);font-family:var(--fm);margin-bottom:8px">Readable PDF summary bhi download kar sakte ho.</div>
+          <button class="btn btn-o btn-full btn-sm" onclick="exportPDF()">📄 Download PDF Summary</button>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-o btn-full btn-sm" onclick="clearAllData()" style="margin-top:4px;color:var(--ar);border-color:rgba(255,79,109,.3)">🗑 Reset All Data</button>
+  </div>
+</div>
+
+<!-- ══════════════ TEST ENGINE PAGES ══════════════ -->
+
+<!-- ── TEST SETUP ── -->
+<div class="page" id="page-testsetup">
+  <div class="pg-title">Test <em>Engine</em> 🎯</div>
+  <!-- Quick stats from test history -->
+  <div class="stat-grid" id="test-home-stats" style="margin-bottom:14px">
+    <div class="sc p"><span class="sc-label">TESTS GIVEN</span><div class="sc-val" id="ths-tests">0</div><span class="sc-hint">total</span></div>
+    <div class="sc g"><span class="sc-label">BEST SCORE</span><div class="sc-val" id="ths-best">—</div><span class="sc-hint">highest</span></div>
+    <div class="sc r"><span class="sc-label">AVG ACCURACY</span><div class="sc-val" id="ths-avg">—</div><span class="sc-hint">all tests</span></div>
+    <div class="sc y"><span class="sc-label">QUESTIONS</span><div class="sc-val" id="ths-qs">0</div><span class="sc-hint">in bank</span></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+    <button class="btn btn-v btn-full" style="height:64px;flex-direction:column;gap:4px;font-size:12px;grid-column:1/-1" onclick="showTestSetup()"><span style="font-size:22px">▶</span>START TEST</button>
+    <button class="btn btn-o btn-full" style="height:64px;flex-direction:column;gap:4px;font-size:12px" onclick="showSubPage2('bank')"><span style="font-size:22px">📚</span>QUESTION BANK</button>
+    <button class="btn btn-o btn-full" style="height:64px;flex-direction:column;gap:4px;font-size:12px" onclick="showSubPage2('history')"><span style="font-size:22px">📊</span>TEST HISTORY</button>
+  </div>
+
+  <div id="sub2-home" class="subpage2">
+    <div class="card">
+      <div class="card-head"><span class="card-title">RECENT ATTEMPTS</span><span class="badge p" id="ths-badge">0 tests</span></div>
+      <div class="card-body" id="ths-recent"></div>
+    </div>
+  </div>
+
+  <!-- Test Config Sub-Panel -->
+  <div id="sub2-config" class="subpage2" style="display:none">
+    <div class="section-header" style="margin-bottom:14px">
+      <span class="section-label" style="margin:0">⚙ TEST SETUP</span>
+      <button class="btn btn-o btn-xs" onclick="showSubPage2('home')">← Back</button>
+    </div>
+
+    <!-- Mode toggle -->
+    <div style="display:flex;gap:8px;margin-bottom:18px">
+      <button class="btn btn-o btn-sm" id="tmode-json" onclick="switchTestMode('json')" style="flex:1;border-color:var(--ap);color:var(--ap)">📋 JSON se Test</button>
+      <button class="btn btn-o btn-sm" id="tmode-bank" onclick="switchTestMode('bank')" style="flex:1">📚 Bank se Test</button>
+    </div>
+
+    <!-- ── JSON MODE ── -->
+    <div id="tmode-json-body">
+      <!-- Step 1: Subject + Chapter -->
+      <div style="background:rgba(79,138,255,.07);border:1px solid rgba(79,138,255,.2);border-radius:10px;padding:12px 14px;margin-bottom:14px">
+        <div style="font-size:10px;font-family:var(--fm);color:var(--ap);letter-spacing:1.5px;margin-bottom:10px">STEP 1 — SUBJECT & CHAPTER</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="ig" style="margin:0"><label class="il">SUBJECT</label><select class="is" id="jt-subj"><option value="p">⚛ Physics</option><option value="g">🧪 Chemistry</option><option value="r">∑ Maths</option></select></div>
+          <div class="ig" style="margin:0"><label class="il">CHAPTER</label><input class="ii" id="jt-chapter" placeholder="e.g. Kinematics" autocomplete="off"></div>
+        </div>
+      </div>
+
+      <!-- Step 2: JSON -->
+      <div class="ig">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+          <label class="il" style="margin:0">STEP 2 — JSON PASTE KARO</label>
+          <button onclick="clearSetupJson()" style="background:rgba(255,79,109,.12);border:1px solid rgba(255,79,109,.3);color:var(--ar);font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;cursor:pointer">🗑 Clear</button>
+        </div>
+        <textarea class="it" id="setup-json-inp" placeholder='[{"q":"...","options":{"1":"A","2":"B","3":"C","4":"D"},"answer":1}]' style="min-height:130px;font-family:var(--fm);font-size:11px" oninput="setupJsonPreview()"></textarea>
+      </div>
+      <div id="setup-json-status" style="display:none;border-radius:8px;padding:9px 12px;margin-bottom:12px;font-size:11px;font-family:var(--fm)"></div>
+
+      <div class="step-pill" style="margin-bottom:10px">STEP 4 — TIMER</div>
+      <div class="timer-options" style="margin-bottom:8px">
+        <div class="timer-opt on" id="jtopt-30" onclick="selectJTimer(30)"><div class="t-min">30</div><div class="t-lbl">MIN</div></div>
+        <div class="timer-opt" id="jtopt-60" onclick="selectJTimer(60)"><div class="t-min">60</div><div class="t-lbl">MIN</div></div>
+        <div class="timer-opt" id="jtopt-90" onclick="selectJTimer(90)"><div class="t-min">90</div><div class="t-lbl">MIN</div></div>
+        <div class="timer-opt" id="jtopt-180" onclick="selectJTimer(180)"><div class="t-min">180</div><div class="t-lbl">JEE</div></div>
+      </div>
+      <div class="custom-timer" style="margin-bottom:14px">
+        <span style="font-size:12px;color:var(--txt3);font-family:var(--fm);flex-shrink:0">Custom:</span>
+        <input class="ii" id="jcustom-timer-inp" type="number" min="1" max="360" placeholder="Minutes" style="flex:1">
+        <button class="btn btn-o btn-sm" onclick="setJCustomTimer()">Set</button>
+      </div>
+
+      <button class="btn btn-v btn-full" id="json-start-btn" onclick="startJsonTest()" style="font-size:15px;padding:14px;opacity:.4;pointer-events:none">▶ Test Shuru Karo</button>
+      <div id="setup-json-count" style="margin-top:8px;font-size:11px;color:var(--txt3);font-family:var(--fm);text-align:center"></div>
+    </div>
+
+    <!-- ── BANK MODE ── -->
+    <div id="tmode-bank-body" style="display:none">
+      <div class="step-pill">STEP 1 — SUBJECT CHOOSE KARO</div>
+      <div class="subject-selector" style="margin-bottom:10px">
+        <div class="subj-card" id="scard-p" onclick="selectBankSubj('p')"><span class="subj-icon">⚛</span><span class="subj-name" style="color:var(--ap)">Physics</span><div id="scard-p-count" style="font-size:9px;color:var(--txt3);font-family:var(--fm);margin-top:3px"></div></div>
+        <div class="subj-card" id="scard-g" onclick="selectBankSubj('g')"><span class="subj-icon">🧪</span><span class="subj-name" style="color:var(--ag)">Chemistry</span><div id="scard-g-count" style="font-size:9px;color:var(--txt3);font-family:var(--fm);margin-top:3px"></div></div>
+        <div class="subj-card" id="scard-r" onclick="selectBankSubj('r')"><span class="subj-icon">∑</span><span class="subj-name" style="color:var(--ar)">Maths</span><div id="scard-r-count" style="font-size:9px;color:var(--txt3);font-family:var(--fm);margin-top:3px"></div></div>
+      </div>
+      <div class="full-mock-card" id="scard-all" onclick="selectBankSubj('all')">
+        <span class="fmc-icon">🏆</span>
+        <div class="fmc-info"><div class="fmc-title">Full Mock</div><div class="fmc-sub" id="scard-all-count">Teeno subjects — bank ke saare questions</div></div>
+      </div>
+
+      <div style="height:14px"></div>
+      <div class="step-pill" id="bstep2-pill" style="opacity:.4">STEP 2 — CHAPTER(S) CHOOSE KARO</div>
+      <div id="bank-chapter-select" style="margin-bottom:4px"><div style="font-size:12px;color:var(--txt3);font-family:var(--fm)">← Pehle subject select karo</div></div>
+
+      <div style="height:14px"></div>
+      <div class="step-pill">STEP 3 — TIMER</div>
+      <div class="timer-options" style="margin-bottom:8px">
+        <div class="timer-opt on" id="topt-30" onclick="selectTimer(30)"><div class="t-min">30</div><div class="t-lbl">MIN</div></div>
+        <div class="timer-opt" id="topt-60" onclick="selectTimer(60)"><div class="t-min">60</div><div class="t-lbl">MIN</div></div>
+        <div class="timer-opt" id="topt-90" onclick="selectTimer(90)"><div class="t-min">90</div><div class="t-lbl">MIN</div></div>
+        <div class="timer-opt" id="topt-180" onclick="selectTimer(180)"><div class="t-min">180</div><div class="t-lbl">JEE</div></div>
+      </div>
+      <div class="custom-timer" style="margin-bottom:14px">
+        <span style="font-size:12px;color:var(--txt3);font-family:var(--fm);flex-shrink:0">Custom:</span>
+        <input class="ii" id="custom-timer-inp" type="number" min="1" max="360" placeholder="Minutes" style="flex:1">
+        <button class="btn btn-o btn-sm" onclick="setCustomTimer()">Set</button>
+      </div>
+      <button class="btn btn-v btn-full" id="bank-start-btn" onclick="startBankTest()" style="font-size:15px;padding:14px;opacity:.4;pointer-events:none">▶ Start Test</button>
+      <div id="bank-start-count" style="margin-top:8px;font-size:11px;color:var(--txt3);font-family:var(--fm);text-align:center"></div>
+    </div>
+  </div>
+
+  <!-- Question Bank Sub-Panel -->
+  <div id="sub2-bank" class="subpage2" style="display:none">
+    <div class="section-header" style="margin-bottom:10px">
+      <span class="section-label" style="margin:0">📚 QUESTION BANK</span>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-p btn-xs" onclick="openAddQ()">＋ Add</button>
+        <button class="btn btn-o btn-xs" onclick="showSubPage2('home')">← Back</button>
+      </div>
+    </div>
+    <!-- Subject filter row -->
+    <div style="display:flex;gap:7px;margin-bottom:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px">
+      <div class="ch-chip on p" id="bfilt-all" onclick="setBankFilter('all',this)">All</div>
+      <div class="ch-chip" id="bfilt-p" onclick="setBankFilter('p',this)">⚛ Physics</div>
+      <div class="ch-chip" id="bfilt-g" onclick="setBankFilter('g',this)">🧪 Chem</div>
+      <div class="ch-chip" id="bfilt-r" onclick="setBankFilter('r',this)">∑ Maths</div>
+    </div>
+    <!-- Chapter filter row (shown when subject selected) -->
+    <div id="bfilt-chapter-row" style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px"></div>
+    <!-- Stats bar -->
+    <div id="bank-stats" style="font-size:11px;color:var(--txt3);font-family:var(--fm);margin-bottom:10px"></div>
+    <div id="bank-list"></div>
+  </div>
+
+  <!-- History Sub-Panel -->
+  <div id="sub2-history" class="subpage2" style="display:none">
+    <div class="section-header" style="margin-bottom:10px">
+      <span class="section-label" style="margin:0">📊 TEST HISTORY</span>
+      <button class="btn btn-o btn-xs" onclick="showSubPage2('home')">← Back</button>
+    </div>
+    <div id="history-list"></div>
+  </div>
+
+
+</div>
+
+<!-- ── CHAPTER DETAIL (full-screen) ── -->
+<div id="page-chapter">
+  <div class="chap-header">
+    <button class="back-btn" onclick="closeChapter()">←</button>
+    <div class="chap-header-info">
+      <div class="chap-header-name" id="chap-name-title">Chapter</div>
+      <div class="chap-header-sub" id="chap-sub-title">Subject</div>
+    </div>
+  </div>
+  <div class="chap-body" id="chap-body" style="padding-bottom:80px"></div>
+</div>
+
+<!-- ── ACTIVE TEST (full-screen) ── -->
+<div id="page-testactive">
+  <div class="test-topbar">
+    <div class="test-timer-display" id="test-timer">00:00</div>
+    <div class="test-progress-wrap">
+      <div class="test-progress-label" id="test-prog-label">Q 1 of 0</div>
+      <div class="test-progress-bar"><div class="test-progress-fill" id="test-prog-fill" style="width:0%"></div></div>
+    </div>
+    <button class="btn btn-r btn-xs" onclick="confirmSubmit()" style="flex-shrink:0">Submit</button>
+  </div>
+  <div class="test-q-area" id="test-q-area"></div>
+  <div class="test-bottombar">
+    <div class="test-nav-dots" id="test-nav-dots"></div>
+    <button class="btn btn-p btn-sm" onclick="nextQ()" id="test-next-btn" style="flex-shrink:0">Next →</button>
+  </div>
+</div>
+
+<!-- ── TEST RESULT (full-screen) ── -->
+<div id="page-testresult">
+  <div class="chap-header">
+    <button class="back-btn" onclick="closeTestResult()">←</button>
+    <div class="chap-header-info">
+      <div class="chap-header-name" id="result-title-hdr">Test Result</div>
+      <div class="chap-header-sub" id="result-sub-hdr">—</div>
+    </div>
+  </div>
+  <div id="result-body" style="padding-bottom:40px"></div>
+</div>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<nav class="bnav">
+  <button class="bn on" id="bn-home" onclick="showPage('home')"><span class="ic">⚡</span>HOME</button>
+  <button class="bn" id="bn-practice" onclick="showPage('practice')"><span class="ic">📐</span>CHAPTERS</button>
+  <button class="bn" id="bn-testsetup" onclick="showPage('testsetup')"><span class="ic">🎯</span>TEST</button>
+  <button class="bn" id="bn-more" onclick="showPage('more')"><span class="ic">☰</span>MORE</button>
+</nav>
+
+<!-- FAB -->
+<button class="fab hide" id="fab" onclick="fabAct()">＋</button>
+
+<!-- ══════════ MODALS ══════════ -->
+
+<!-- ADD TASK -->
+<div class="overlay" id="task-modal" onclick="overlayClose(event,'task-modal')">
+  <div class="modal">
+    <div class="modal-bar"></div>
+    <button class="modal-close" onclick="closeModal('task-modal')">✕</button>
+    <div class="modal-title">Add Today's Task</div>
+    <div class="ig"><label class="il">TASK NAME</label><input class="ii" id="ti-name" placeholder="e.g. Kinematics 20 MCQs" autocomplete="off"></div>
+    <div class="ig"><label class="il">SUBJECT</label><select class="is" id="ti-subj"><option>Physics</option><option>Chemistry</option><option>Mathematics</option></select></div>
+    <button class="btn btn-p btn-full" onclick="saveTask()">Add Task</button>
+  </div>
+</div>
+
+<!-- ADD FORMULA -->
+<div class="overlay" id="form-modal" onclick="overlayClose(event,'form-modal')">
+  <div class="modal">
+    <div class="modal-bar"></div>
+    <button class="modal-close" onclick="closeModal('form-modal')">✕</button>
+    <div class="modal-title">Add Formula</div>
+    <div class="ig"><label class="il">SUBJECT</label><select class="is" id="fi-subj"><option value="p">Physics</option><option value="g">Chemistry</option><option value="r">Mathematics</option></select></div>
+    <div class="ig"><label class="il">FORMULA NAME</label><input class="ii" id="fi-name" placeholder="e.g. OHM'S LAW" autocomplete="off"></div>
+    <div class="ig"><label class="il">EXPRESSION</label><input class="ii" id="fi-eq" placeholder="e.g. V = IR" autocomplete="off"></div>
+    <button class="btn btn-p btn-full" onclick="saveFormula()">Save Formula</button>
+  </div>
+</div>
+
+<!-- ADD NOTE -->
+<div class="overlay" id="note-modal" onclick="overlayClose(event,'note-modal')">
+  <div class="modal">
+    <div class="modal-bar"></div>
+    <button class="modal-close" onclick="closeModal('note-modal')">✕</button>
+    <div class="modal-title">Add Important Note</div>
+    <div class="ig"><label class="il">SUBJECT</label><select class="is" id="ni-subj"><option value="p">Physics</option><option value="g">Chemistry</option><option value="r">Mathematics</option></select></div>
+    <div class="ig"><label class="il">TITLE</label><input class="ii" id="ni-title" placeholder="e.g. Newton's Laws Summary" autocomplete="off"></div>
+    <div class="ig"><label class="il">CONTENT</label><textarea class="it" id="ni-body" placeholder="Key points, concepts, formulas..."></textarea></div>
+    <button class="btn btn-p btn-full" onclick="saveNote()">Save Note</button>
+  </div>
+</div>
+
+<!-- ADD BACKLOG -->
+<div class="overlay" id="bl-modal" onclick="overlayClose(event,'bl-modal')">
+  <div class="modal">
+    <div class="modal-bar"></div>
+    <button class="modal-close" onclick="closeModal('bl-modal')">✕</button>
+    <div class="modal-title">Add to Backlog</div>
+    <div class="ig"><label class="il">TOPIC NAME</label><input class="ii" id="bl-topic" placeholder="e.g. Rotational Mechanics" autocomplete="off"></div>
+    <div class="ig"><label class="il">SUBJECT</label><select class="is" id="bl-subj"><option>Physics</option><option>Chemistry</option><option>Mathematics</option></select></div>
+    <div class="ig"><label class="il">PRIORITY</label><select class="is" id="bl-prio"><option value="high">🔴 High</option><option value="med">🟡 Medium</option><option value="low">🟢 Low</option></select></div>
+    <div class="ig"><label class="il">DUE DATE (Optional)</label><input class="ii" id="bl-due" type="date"></div>
+    <button class="btn btn-p btn-full" onclick="saveBacklog()">Add to Backlog</button>
+  </div>
+</div>
+
+<!-- ADD REVISION -->
+<div class="overlay" id="rev-modal" onclick="overlayClose(event,'rev-modal')">
+  <div class="modal">
+    <div class="modal-bar"></div>
+    <button class="modal-close" onclick="closeModal('rev-modal')">✕</button>
+    <div class="modal-title">Add Revision Topic</div>
+    <div class="ig"><label class="il">TOPIC</label><input class="ii" id="ri-topic" placeholder="e.g. Integration" autocomplete="off"></div>
+    <div class="ig"><label class="il">SUBJECT</label><select class="is" id="ri-subj"><option>Physics</option><option>Chemistry</option><option>Mathematics</option></select></div>
+    <div class="ig"><label class="il">REVISE EVERY</label><select class="is" id="ri-interval"><option value="1">Every 1 day</option><option value="2">Every 2 days</option><option value="3">Every 3 days</option><option value="5">Every 5 days</option><option value="7">Every 7 days</option></select></div>
+    <button class="btn btn-p btn-full" onclick="saveRevision()">Add Topic</button>
+  </div>
+</div>
+
+<!-- ADD MOCK -->
+<div class="overlay" id="mock-modal" onclick="overlayClose(event,'mock-modal')">
+  <div class="modal">
+    <div class="modal-bar"></div>
+    <button class="modal-close" onclick="closeModal('mock-modal')">✕</button>
+    <div class="modal-title">Add Mock Test Result</div>
+    <div class="ig"><label class="il">TEST NAME</label><input class="ii" id="mi-name" placeholder="e.g. JEE Main Mock #1" autocomplete="off"></div>
+    <div class="ig"><label class="il">DATE</label><input class="ii" id="mi-date" type="date"></div>
+    <div class="ig"><label class="il">YOUR SCORE</label><input class="ii" id="mi-score" type="number" placeholder="e.g. 210"></div>
+    <div class="ig"><label class="il">TOTAL MARKS</label><input class="ii" id="mi-total" type="number" placeholder="300" value="300"></div>
+    <div class="ig"><label class="il">EXPECTED RANK (Optional)</label><input class="ii" id="mi-rank" placeholder="e.g. ~4500" autocomplete="off"></div>
+    <button class="btn btn-p btn-full" onclick="saveMock()">Save Result</button>
+  </div>
+</div>
+
+<!-- UPDATE SCORES -->
+<div class="overlay" id="score-modal" onclick="overlayClose(event,'score-modal')">
+  <div class="modal">
+    <div class="modal-bar"></div>
+    <button class="modal-close" onclick="closeModal('score-modal')">✕</button>
+    <div class="modal-title">Update Subject Accuracy</div>
+    <div class="ig"><label class="il">PHYSICS ACCURACY (%)</label><input class="ii" id="sp" type="number" min="0" max="100" placeholder="e.g. 74"></div>
+    <div class="ig"><label class="il">CHEMISTRY ACCURACY (%)</label><input class="ii" id="sc2" type="number" min="0" max="100" placeholder="e.g. 68"></div>
+    <div class="ig"><label class="il">MATHS ACCURACY (%)</label><input class="ii" id="sm" type="number" min="0" max="100" placeholder="e.g. 81"></div>
+    <button class="btn btn-p btn-full" onclick="saveScores()">Update Scores</button>
+  </div>
+</div>
+
+<!-- ADD QUESTION (Test Engine) -->
+<div class="overlay" id="addq-modal" onclick="overlayClose(event,'addq-modal')">
+  <div class="modal">
+    <div class="modal-bar"></div>
+    <button class="modal-close" onclick="closeModal('addq-modal')">✕</button>
+    <div class="modal-title">Add Question</div>
+    <!-- 3 Tabs -->
+    <div style="display:flex;gap:6px;margin-bottom:16px">
+      <button class="btn btn-o btn-xs" id="tab-manual" onclick="switchAddTab('manual')" style="flex:1;border-color:var(--ap);color:var(--ap)">✏ Single</button>
+      <button class="btn btn-o btn-xs" id="tab-bulk" onclick="switchAddTab('bulk')" style="flex:1">📋 Bulk</button>
+      <button class="btn btn-o btn-xs" id="tab-ai" onclick="switchAddTab('ai')" style="flex:1">📂 JSON Import</button>
+    </div>
+
+    <!-- ── SINGLE TAB ── -->
+    <div id="tab-manual-body">
+      <div class="ig"><label class="il">SUBJECT</label><select class="is" id="q-subj"><option value="p">⚛ Physics</option><option value="g">🧪 Chemistry</option><option value="r">∑ Mathematics</option></select></div>
+      <div class="ig"><label class="il">CHAPTER</label><input class="ii" id="q-chapter" placeholder="e.g. Kinematics" autocomplete="off"></div>
+      <div class="ig"><label class="il">QUESTION</label><textarea class="it" id="q-text-inp" placeholder="Question yahan type karo..."></textarea></div>
+      <div class="ig"><label class="il">OPTION A</label><input class="ii" id="q-oa" placeholder="Option A" autocomplete="off"></div>
+      <div class="ig"><label class="il">OPTION B</label><input class="ii" id="q-ob" placeholder="Option B" autocomplete="off"></div>
+      <div class="ig"><label class="il">OPTION C</label><input class="ii" id="q-oc" placeholder="Option C" autocomplete="off"></div>
+      <div class="ig"><label class="il">OPTION D</label><input class="ii" id="q-od" placeholder="Option D" autocomplete="off"></div>
+      <div class="ig"><label class="il">CORRECT ANSWER</label><select class="is" id="q-ans"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select></div>
+      <div class="ig"><label class="il">EXPLANATION (Optional)</label><textarea class="it" id="q-exp" placeholder="Solution / explanation..." style="min-height:60px"></textarea></div>
+      <button class="btn btn-p btn-full" onclick="saveManualQ()">Save Question</button>
+    </div>
+
+    <!-- ── BULK TAB ── -->
+    <div id="tab-bulk-body" style="display:none">
+      <!-- Common subject & chapter for all bulk questions -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+        <div class="ig" style="margin:0"><label class="il">SUBJECT</label><select class="is" id="bq-subj"><option value="p">⚛ Physics</option><option value="g">🧪 Chemistry</option><option value="r">∑ Mathematics</option></select></div>
+        <div class="ig" style="margin:0"><label class="il">CHAPTER</label><input class="ii" id="bq-chapter" placeholder="e.g. Kinematics" autocomplete="off"></div>
+      </div>
+
+      <!-- Queue counter -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span style="font-size:11px;font-family:var(--fm);color:var(--txt3)">QUESTIONS IN QUEUE</span>
+        <span id="bulk-counter" style="font-size:14px;font-weight:800;color:var(--ap);font-family:var(--fm)">0</span>
+      </div>
+
+      <!-- Queue preview -->
+      <div id="bulk-queue-preview" style="max-height:120px;overflow-y:auto;margin-bottom:12px"></div>
+
+      <!-- Form for each question -->
+      <div style="background:var(--s2);border-radius:12px;padding:14px;border:1px solid var(--b2)">
+        <div style="font-size:10px;font-family:var(--fm);color:var(--ap);letter-spacing:1.5px;margin-bottom:10px">ADD NEXT QUESTION</div>
+        <div class="ig"><label class="il">QUESTION</label><textarea class="it" id="bq-text" placeholder="Question yahan type karo..." style="min-height:70px"></textarea></div>
+        <div class="ig"><label class="il">OPTION A</label><input class="ii" id="bq-oa" placeholder="Option A" autocomplete="off"></div>
+        <div class="ig"><label class="il">OPTION B</label><input class="ii" id="bq-ob" placeholder="Option B" autocomplete="off"></div>
+        <div class="ig"><label class="il">OPTION C</label><input class="ii" id="bq-oc" placeholder="Option C" autocomplete="off"></div>
+        <div class="ig"><label class="il">OPTION D</label><input class="ii" id="bq-od" placeholder="Option D" autocomplete="off"></div>
+        <div class="ig"><label class="il">CORRECT ANSWER</label>
+          <select class="is" id="bq-ans"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select>
+        </div>
+        <div class="ig"><label class="il">EXPLANATION (Optional)</label><textarea class="it" id="bq-exp" placeholder="Solution..." style="min-height:50px"></textarea></div>
+        <button class="btn btn-o btn-full btn-sm" onclick="addToBulkQueue()" style="border-color:var(--ap);color:var(--ap)">＋ Queue Mein Add Karo</button>
+      </div>
+
+      <div style="height:10px"></div>
+      <button class="btn btn-p btn-full" id="bulk-save-btn" onclick="saveBulkQ()" style="opacity:.4;pointer-events:none">💾 Sab Save Karo (<span id="bulk-save-count">0</span>)</button>
+      <div style="margin-top:8px;font-size:11px;color:var(--txt3);font-family:var(--fm);text-align:center">Pehle queue mein add karo, phir ek saath save karo</div>
+    </div>
+
+    <!-- ── JSON IMPORT TAB ── -->
+    <div id="tab-ai-body" style="display:none">
+
+      <!-- Subject + Chapter pehle select karo -->
+      <div style="background:rgba(79,138,255,.07);border:1px solid rgba(79,138,255,.2);border-radius:10px;padding:12px 14px;margin-bottom:12px">
+        <div style="font-size:10px;font-family:var(--fm);color:var(--ap);letter-spacing:1.5px;margin-bottom:10px">STEP 1 — SUBJECT & CHAPTER SELECT KARO</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="ig" style="margin:0"><label class="il">SUBJECT</label><select class="is" id="ji-subj"><option value="p">⚛ Physics</option><option value="g">🧪 Chemistry</option><option value="r">∑ Mathematics</option></select></div>
+          <div class="ig" style="margin:0"><label class="il">CHAPTER</label><input class="ii" id="ji-chapter" placeholder="e.g. Kinematics" autocomplete="off"></div>
+        </div>
+      </div>
+
+      <!-- File upload OR paste -->
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <button class="btn btn-p btn-sm" style="flex:1" onclick="ge('json-file-inp').click()">📁 JSON File Upload</button>
+        <input type="file" id="json-file-inp" accept=".json" style="display:none" onchange="loadJsonFile(event)">
+        <button class="btn btn-o btn-sm" style="flex:1" onclick="toggleJsonPaste()">✏ Paste JSON</button>
+      </div>
+
+      <div id="json-paste-area" style="display:none">
+        <div class="ig">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <label class="il" style="margin:0">JSON PASTE KARO</label>
+            <button onclick="clearJsonPaste()" style="background:rgba(255,79,109,.12);border:1px solid rgba(255,79,109,.3);color:var(--ar);font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;cursor:pointer">🗑 Clear</button>
+          </div>
+          <textarea class="it" id="json-paste-inp" placeholder='[{"q":"...","options":{"1":"A","2":"B","3":"C","4":"D"},"answer":1}]' style="min-height:140px;font-family:var(--fm);font-size:11px"></textarea>
+        </div>
+      </div>
+
+      <!-- Preview -->
+      <div id="json-preview" style="display:none;margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:10px;font-family:var(--fm);color:var(--txt3);letter-spacing:1.5px">PREVIEW</span>
+          <span id="json-preview-count" style="font-size:13px;font-weight:800;color:var(--ag);font-family:var(--fm)">0 questions</span>
+        </div>
+        <div id="json-preview-list" style="max-height:160px;overflow-y:auto"></div>
+      </div>
+
+      <!-- Error box -->
+      <div id="json-error" style="display:none;background:rgba(255,79,109,.1);border:1px solid rgba(255,79,109,.3);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:12px;color:var(--ar);font-family:var(--fm)"></div>
+
+      <button class="btn btn-p btn-full" id="json-import-btn" onclick="importJsonQ()" style="opacity:.4;pointer-events:none">
+        💾 Import Karo (<span id="json-import-count">0</span> questions)
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM SUBMIT -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-title">Test Submit Karo?</div>
+    <div class="confirm-msg" id="confirm-msg">Kuch questions unattempted hain. Pakka submit karna hai?</div>
+    <div class="confirm-btns">
+      <button class="btn btn-o btn-full" onclick="closeConfirm()">Wapas Jao</button>
+      <button class="btn btn-r btn-full" onclick="submitTest()">Submit</button>
+    </div>
+  </div>
+</div>
+
+
+  <script src="app.js"></script>
+</body>
+</html>
